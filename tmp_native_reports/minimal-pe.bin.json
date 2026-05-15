@@ -1,0 +1,59 @@
+{
+  "target": "C:\\Users\\yangxu\\Desktop\\tools\\reverse-tools\\main\\native\\native_probe\\build\\minimal-pe.bin",
+  "generated_at": "2026-05-13T06:47:25.000065+00:00",
+  "config": {
+    "min_string": 4,
+    "max_strings": 500,
+    "entropy_window": 4096,
+    "entropy_threshold": 7.2,
+    "max_entropy_regions": 20,
+    "native_probe_enabled": true,
+    "native_probe_path": null,
+    "native_probe_timeout": 30,
+    "enabled_analyzers": [],
+    "external_tools": {}
+  },
+  "findings": {
+    "native_probe": {
+      "tool": "native_probe",
+      "version": "0.1.0",
+      "target": "C:\\Users\\yangxu\\Desktop\\tools\\reverse-tools\\main\\native\\native_probe\\build\\minimal-pe.bin",
+      "file_size": 256,
+      "magic": "4d 5a 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+      "format": "PE",
+      "valid": true,
+      "headers": {
+        "pe_offset": 128,
+        "machine": "x64",
+        "sections": 0,
+        "timestamp": 0,
+        "optional_header_size": 0,
+        "optional_header_magic": "0x0",
+        "subsystem": "0",
+        "subsystem_value": 0,
+        "characteristics": "0x2022",
+        "dll_characteristics": "0x0",
+        "certificate_table_size": 0,
+        "certificate_table_present": false
+      },
+      "sections": [],
+      "section_list_truncated": false
+    }
+  },
+  "issues": [],
+  "indicators": [],
+  "tools": [
+    {
+      "name": "native_probe",
+      "command": [
+        "C:\\Users\\yangxu\\Desktop\\tools\\reverse-tools\\main\\native\\native_probe\\build\\native_probe.exe",
+        "C:\\Users\\yangxu\\Desktop\\tools\\reverse-tools\\main\\native\\native_probe\\build\\minimal-pe.bin"
+      ],
+      "available": true,
+      "enabled": true,
+      "output": "{\"tool\":\"native_probe\",\"version\":\"0.1.0\",\"target\":\"C:\\\\Users\\\\yangxu\\\\Desktop\\\\tools\\\\reverse-tools\\\\main\\\\native\\\\native_probe\\\\build\\\\minimal-pe.bin\",\"file_size\":256,\"magic\":\"4d 5a 00 00 00 00 00 00 00 00 00 00 00 00 00 00\",\"format\":\"PE\",\"valid\":true,\"headers\":{\"pe_offset\":128,\"machine\":\"x64\",\"sections\":0,\"timestamp\":0,\"optional_header_size\":0,\"optional_header_magic\":\"0x0\",\"subsystem\":\"0\",\"subsystem_value\":0,\"characteristics\":\"0x2022\",\"dll_characteristics\":\"0x0\",\"certificate_table_size\":0,\"certificate_table_present\":false},\"sections\":[],\"section_list_truncated\":false}",
+      "error": null
+    }
+  ],
+  "errors": []
+}

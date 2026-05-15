@@ -1,0 +1,20 @@
+[project]
+name = "reverse-tools"
+version = "0.1.0"
+description = "A small, plugin-based reverse engineering triage framework."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0.0",
+]
+
+[project.scripts]
+reverse-tools = "reverse_framework.cli:main"
+reverse-tools-gui = "reverse_framework.gui:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

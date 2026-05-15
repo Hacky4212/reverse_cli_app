@@ -1,0 +1,11 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\native",
+    "\\native\\dll_audit",
+    "\\native\\native_probe",
+    "\\native\\perf_scan",
+    "\\native\\process_memory_reader"
+  ],
+  "PreviewInSolutionExplorer": false
+}

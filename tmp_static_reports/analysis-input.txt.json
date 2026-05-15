@@ -1,0 +1,730 @@
+{
+  "target": "analysis-input.txt",
+  "generated_at": "2026-05-13T05:56:50.041483+00:00",
+  "config": {
+    "min_string": 4,
+    "max_strings": 500,
+    "entropy_window": 4096,
+    "entropy_threshold": 7.2,
+    "max_entropy_regions": 20,
+    "native_probe_enabled": true,
+    "native_probe_path": null,
+    "native_probe_timeout": 30,
+    "enabled_analyzers": [],
+    "external_tools": {}
+  },
+  "findings": {
+    "code_structure": {
+      "input_kind": "assembly",
+      "line_count": 10,
+      "CFG": {
+        "nodes": [
+          {
+            "id": "B1",
+            "start_line": 1,
+            "end_line": 5,
+            "label": "sub_1000",
+            "address": null,
+            "instructions": [
+              "sub_1000:",
+              "call recv",
+              "mov [rsp+20h], rax",
+              "cmp eax, 0",
+              "jle loc_exit"
+            ]
+          },
+          {
+            "id": "B2",
+            "start_line": 6,
+            "end_line": 8,
+            "label": null,
+            "address": null,
+            "instructions": [
+              "mov rcx, [rsp+20h]",
+              "call GetProcAddress",
+              "jmp [rax+rcx*8]"
+            ]
+          },
+          {
+            "id": "B3",
+            "start_line": 9,
+            "end_line": 10,
+            "label": "loc_exit",
+            "address": null,
+            "instructions": [
+              "loc_exit:",
+              "ret"
+            ]
+          }
+        ],
+        "edges": [
+          {
+            "from": "B1",
+            "to": "B3",
+            "kind": "conditional_true",
+            "line": 5,
+            "condition": "jle"
+          },
+          {
+            "from": "B1",
+            "to": "B2",
+            "kind": "conditional_false",
+            "line": 5,
+            "condition": "jle"
+          },
+          {
+            "from": "B2",
+            "to": "[rax+rcx*8]",
+            "kind": "indirect_jump",
+            "line": 8
+          }
+        ],
+        "branch_paths": [
+          {
+            "line": 5,
+            "kind": "conditional",
+            "source_block": "B1",
+            "condition": "jle",
+            "true_target": "B3",
+            "false_target": "B2",
+            "source": "jle loc_exit"
+          }
+        ],
+        "all_paths": [
+          {
+            "path": [
+              "B1",
+              "B3"
+            ],
+            "edge_kinds": [
+              "conditional_true"
+            ],
+            "terminal": "B3",
+            "truncated": false
+          },
+          {
+            "path": [
+              "B1",
+              "B2",
+              "[rax+rcx*8]"
+            ],
+            "edge_kinds": [
+              "conditional_false",
+              "indirect_jump"
+            ],
+            "terminal": "[rax+rcx*8]",
+            "truncated": false
+          }
+        ],
+        "edge_index": [
+          {
+            "id": "E1",
+            "from": "B1",
+            "to": "B3",
+            "kind": "conditional_true",
+            "line": 5,
+            "condition": "jle"
+          },
+          {
+            "id": "E2",
+            "from": "B1",
+            "to": "B2",
+            "kind": "conditional_false",
+            "line": 5,
+            "condition": "jle"
+          },
+          {
+            "id": "E3",
+            "from": "B2",
+            "to": "[rax+rcx*8]",
+            "kind": "indirect_jump",
+            "line": 8,
+            "condition": null
+          }
+        ],
+        "unresolved_edges": [],
+        "loops": [],
+        "loop_headers": [],
+        "exception_paths": [],
+        "return_paths": [
+          {
+            "line": 10,
+            "source": "ret",
+            "kind": "return"
+          }
+        ],
+        "terminal_blocks": [
+          {
+            "block": "B3",
+            "start_line": 9,
+            "end_line": 10,
+            "reason": "return"
+          }
+        ],
+        "limits": {
+          "max_lines": 5000,
+          "truncated": false
+        }
+      },
+      "DFG": {
+        "input_sources": [
+          {
+            "id": "network:recv:2",
+            "line": 2,
+            "kind": "network",
+            "callee": "recv",
+            "source": "call recv"
+          },
+          {
+            "id": "api:GetProcAddress:7",
+            "line": 7,
+            "kind": "api",
+            "callee": "GetProcAddress",
+            "source": "call GetProcAddress"
+          }
+        ],
+        "propagation_edges": [
+          {
+            "from": "network:recv:2",
+            "to": "rax",
+            "line": 2,
+            "operation": "input_source"
+          },
+          {
+            "from": "network:recv:2",
+            "to": "eax",
+            "line": 2,
+            "operation": "input_source"
+          },
+          {
+            "from": "rax",
+            "to": "[rsp+20h]",
+            "line": 3,
+            "operation": "mov"
+          },
+          {
+            "from": "rsp",
+            "to": "rcx",
+            "line": 6,
+            "operation": "mov"
+          },
+          {
+            "from": "api:GetProcAddress:7",
+            "to": "rax",
+            "line": 7,
+            "operation": "input_source"
+          },
+          {
+            "from": "api:GetProcAddress:7",
+            "to": "eax",
+            "line": 7,
+            "operation": "input_source"
+          }
+        ],
+        "propagation_chains": [
+          {
+            "source": "network:recv:2",
+            "targets": [
+              "rax",
+              "eax"
+            ],
+            "operations": [
+              "input_source"
+            ],
+            "first_line": 2,
+            "last_line": 2,
+            "steps": [
+              {
+                "to": "rax",
+                "line": 2,
+                "operation": "input_source"
+              },
+              {
+                "to": "eax",
+                "line": 2,
+                "operation": "input_source"
+              }
+            ]
+          },
+          {
+            "source": "rax",
+            "targets": [
+              "[rsp+20h]"
+            ],
+            "operations": [
+              "mov"
+            ],
+            "first_line": 3,
+            "last_line": 3,
+            "steps": [
+              {
+                "to": "[rsp+20h]",
+                "line": 3,
+                "operation": "mov"
+              }
+            ]
+          },
+          {
+            "source": "rsp",
+            "targets": [
+              "rcx"
+            ],
+            "operations": [
+              "mov"
+            ],
+            "first_line": 6,
+            "last_line": 6,
+            "steps": [
+              {
+                "to": "rcx",
+                "line": 6,
+                "operation": "mov"
+              }
+            ]
+          },
+          {
+            "source": "api:GetProcAddress:7",
+            "targets": [
+              "rax",
+              "eax"
+            ],
+            "operations": [
+              "input_source"
+            ],
+            "first_line": 7,
+            "last_line": 7,
+            "steps": [
+              {
+                "to": "rax",
+                "line": 7,
+                "operation": "input_source"
+              },
+              {
+                "to": "eax",
+                "line": 7,
+                "operation": "input_source"
+              }
+            ]
+          }
+        ],
+        "key_variable_influence_paths": [
+          {
+            "line": 8,
+            "kind": "input_to_branch",
+            "variables": [
+              "rax"
+            ],
+            "source_ids": [
+              "api:GetProcAddress:7"
+            ],
+            "source": "jmp [rax+rcx*8]"
+          }
+        ],
+        "register_flows": [
+          {
+            "from": "network:recv:2",
+            "to": "rax",
+            "from_family": null,
+            "to_family": "rax",
+            "line": 2,
+            "operation": "input_source"
+          },
+          {
+            "from": "network:recv:2",
+            "to": "eax",
+            "from_family": null,
+            "to_family": "rax",
+            "line": 2,
+            "operation": "input_source"
+          },
+          {
+            "from": "rax",
+            "to": "[rsp+20h]",
+            "from_family": "rax",
+            "to_family": null,
+            "line": 3,
+            "operation": "mov"
+          },
+          {
+            "from": "rsp",
+            "to": "rcx",
+            "from_family": "rsp",
+            "to_family": "rcx",
+            "line": 6,
+            "operation": "mov"
+          },
+          {
+            "from": "api:GetProcAddress:7",
+            "to": "rax",
+            "from_family": null,
+            "to_family": "rax",
+            "line": 7,
+            "operation": "input_source"
+          },
+          {
+            "from": "api:GetProcAddress:7",
+            "to": "eax",
+            "from_family": null,
+            "to_family": "rax",
+            "line": 7,
+            "operation": "input_source"
+          }
+        ],
+        "stack_slot_flows": [
+          {
+            "from": "rax",
+            "to": "[rsp+20h]",
+            "line": 3,
+            "operation": "mov"
+          }
+        ],
+        "memory_data_edges": [],
+        "flag_dependencies": [
+          {
+            "line": 4,
+            "operation": "cmp",
+            "variables": [
+              "cmp",
+              "eax"
+            ],
+            "tainted_variables": [
+              "eax"
+            ],
+            "source_ids": [
+              "api:GetProcAddress:7"
+            ],
+            "source": "cmp eax, 0"
+          }
+        ],
+        "tainted_variables": [
+          "[rsp+20h]",
+          "eax",
+          "rax"
+        ]
+      },
+      "CALL": {
+        "calls": [
+          {
+            "line": 2,
+            "caller": "sub_1000",
+            "callee": "recv",
+            "type": "api",
+            "arguments": [],
+            "source": "call recv"
+          },
+          {
+            "line": 7,
+            "caller": "sub_1000",
+            "callee": "GetProcAddress",
+            "type": "api",
+            "arguments": [],
+            "source": "call GetProcAddress"
+          }
+        ],
+        "call_chains": [
+          {
+            "caller": "sub_1000",
+            "sequence": [
+              "recv",
+              "GetProcAddress"
+            ]
+          }
+        ],
+        "call_graph_edges": [
+          {
+            "from": "sub_1000",
+            "to": "recv",
+            "line": 2,
+            "kind": "api"
+          },
+          {
+            "from": "sub_1000",
+            "to": "GetProcAddress",
+            "line": 7,
+            "kind": "api"
+          }
+        ],
+        "implicit_paths": [
+          {
+            "line": 8,
+            "kind": "indirect_jump",
+            "target": "[rax+rcx*8]",
+            "source": "jmp [rax+rcx*8]"
+          }
+        ],
+        "indirect_targets": [
+          {
+            "line": 8,
+            "kind": "indirect_jump",
+            "target": "[rax+rcx*8]",
+            "source": "jmp [rax+rcx*8]"
+          }
+        ],
+        "callback_registrations": [],
+        "syscall_calls": [],
+        "api_calls": [
+          {
+            "line": 2,
+            "caller": "sub_1000",
+            "callee": "recv",
+            "type": "api",
+            "arguments": [],
+            "source": "call recv"
+          },
+          {
+            "line": 7,
+            "caller": "sub_1000",
+            "callee": "GetProcAddress",
+            "type": "api",
+            "arguments": [],
+            "source": "call GetProcAddress"
+          }
+        ],
+        "dispatch_table_candidates": [
+          {
+            "line": 8,
+            "kind": "indirect_jump",
+            "target": "[rax+rcx*8]",
+            "source": "jmp [rax+rcx*8]"
+          }
+        ]
+      },
+      "MEMORY": {
+        "reads": [
+          {
+            "line": 6,
+            "location": "[rsp+20h]",
+            "operation": "mov",
+            "source": "mov rcx, [rsp+20h]"
+          },
+          {
+            "line": 8,
+            "location": "[rax+rcx*8]",
+            "operation": "jmp",
+            "source": "jmp [rax+rcx*8]"
+          }
+        ],
+        "writes": [
+          {
+            "line": 3,
+            "location": "[rsp+20h]",
+            "operation": "mov",
+            "source": "mov [rsp+20h], rax"
+          },
+          {
+            "line": 3,
+            "location": "[rsp+20h]",
+            "operation": "write",
+            "source": "mov [rsp+20h], rax"
+          }
+        ],
+        "access_sequence": [
+          {
+            "line": 3,
+            "location": "[rsp+20h]",
+            "operation": "mov",
+            "source": "mov [rsp+20h], rax",
+            "access": "write",
+            "object_kind": "stack_slot"
+          },
+          {
+            "line": 3,
+            "location": "[rsp+20h]",
+            "operation": "write",
+            "source": "mov [rsp+20h], rax",
+            "access": "write",
+            "object_kind": "stack_slot"
+          },
+          {
+            "line": 6,
+            "location": "[rsp+20h]",
+            "operation": "mov",
+            "source": "mov rcx, [rsp+20h]",
+            "access": "read",
+            "object_kind": "stack_slot"
+          },
+          {
+            "line": 8,
+            "location": "[rax+rcx*8]",
+            "operation": "jmp",
+            "source": "jmp [rax+rcx*8]",
+            "access": "read",
+            "object_kind": "indexed_memory"
+          }
+        ],
+        "memory_objects": [
+          {
+            "object": "mem:[rsp+20h]",
+            "location": "[rsp+20h]",
+            "kind": "stack_slot",
+            "read_count": 1,
+            "write_count": 2,
+            "first_line": 3,
+            "last_line": 6,
+            "operations": [
+              "mov",
+              "write"
+            ]
+          },
+          {
+            "object": "mem:[rax+rcx*8]",
+            "location": "[rax+rcx*8]",
+            "kind": "indexed_memory",
+            "read_count": 1,
+            "write_count": 0,
+            "first_line": 8,
+            "last_line": 8,
+            "operations": [
+              "jmp"
+            ]
+          }
+        ],
+        "pointer_propagation_paths": [
+          {
+            "line": 6,
+            "from": "[rsp+20h]",
+            "to": "rcx",
+            "kind": "pointer_propagation",
+            "source": "mov rcx, [rsp+20h]"
+          }
+        ],
+        "pointer_chains": [
+          {
+            "from": "[rsp+20h]",
+            "to": "rcx",
+            "kind": "pointer_propagation",
+            "line": 6,
+            "source_kind": "stack_slot",
+            "target_kind": "symbolic_memory"
+          }
+        ],
+        "potential_exception_structures": [
+          {
+            "line": 3,
+            "kind": "input_influenced_memory_write",
+            "structure": "input-derived value reaches a memory write",
+            "source": "mov [rsp+20h], rax"
+          },
+          {
+            "line": 3,
+            "kind": "unchecked_indexed_access",
+            "structure": "indexed memory access without nearby bounds check",
+            "source": "mov [rsp+20h], rax"
+          }
+        ]
+      },
+      "SEMANTICS": {
+        "intent": "dynamic routine resolver and indirect dispatcher",
+        "confidence": 0.78,
+        "behavior_traits": [
+          "external-input processing",
+          "dynamic API resolution",
+          "control dispatcher",
+          "stack-backed state",
+          "symbolic or indexed memory access",
+          "multi-path execution model"
+        ],
+        "basis": [
+          "control-flow shape",
+          "data-source categories",
+          "call target categories",
+          "memory access structure"
+        ],
+        "structural_evidence": [
+          "DFG contains input sources: api, network",
+          "CALL contains loader or resolver APIs",
+          "CFG contains multiple branches or indirect dispatch",
+          "MEMORY contains stack-slot objects",
+          "MEMORY contains symbolic or indexed memory objects",
+          "CFG enumerates 2 bounded paths"
+        ],
+        "execution_model_hints": {
+          "path_count": 2,
+          "has_external_input": true,
+          "has_loop_transform": false,
+          "has_indirect_dispatch": true,
+          "has_stack_state": true,
+          "has_symbolic_memory": true
+        }
+      },
+      "RISK": {
+        "score": 70,
+        "confidence": 0.7,
+        "paths": [
+          {
+            "kind": "input_influenced_branch",
+            "line": 8,
+            "structure": "external input influences a branch condition",
+            "source_ids": [
+              "api:GetProcAddress:7"
+            ],
+            "source": "jmp [rax+rcx*8]"
+          }
+        ],
+        "structures": [
+          {
+            "line": 3,
+            "kind": "input_influenced_memory_write",
+            "structure": "input-derived value reaches a memory write",
+            "source": "mov [rsp+20h], rax"
+          },
+          {
+            "line": 3,
+            "kind": "unchecked_indexed_access",
+            "structure": "indexed memory access without nearby bounds check",
+            "source": "mov [rsp+20h], rax"
+          },
+          {
+            "line": 8,
+            "kind": "indirect_jump",
+            "structure": "target is selected indirectly or through a dispatch table",
+            "source": "jmp [rax+rcx*8]"
+          },
+          {
+            "kind": "input_influenced_flag",
+            "structure": "external input reaches a flag-setting comparison",
+            "line": 4,
+            "source_ids": [
+              "api:GetProcAddress:7"
+            ]
+          }
+        ],
+        "scope": "structural only; no exploit guidance"
+      }
+    }
+  },
+  "issues": [
+    {
+      "id": "risky_binary_code_structure",
+      "title": "Risky binary-level structure detected",
+      "severity": "medium",
+      "category": "structure",
+      "summary": "The code structure contains input-influenced control, indirect dispatch, or memory-write paths.",
+      "confidence": 0.7,
+      "evidence": {
+        "score": 70,
+        "paths": [
+          {
+            "kind": "input_influenced_branch",
+            "line": 8,
+            "structure": "external input influences a branch condition",
+            "source_ids": [
+              "api:GetProcAddress:7"
+            ],
+            "source": "jmp [rax+rcx*8]"
+          }
+        ]
+      },
+      "tags": [
+        "cfg",
+        "dfg",
+        "memory",
+        "structure"
+      ],
+      "recommendation": "Review the marked structural paths during manual reverse engineering."
+    }
+  ],
+  "indicators": [],
+  "tools": [],
+  "errors": []
+}

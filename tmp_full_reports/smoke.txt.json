@@ -1,0 +1,21 @@
+{
+  "target": "smoke.txt",
+  "generated_at": "2026-05-13T06:26:45.359457+00:00",
+  "config": {
+    "min_string": 4,
+    "max_strings": 500,
+    "entropy_window": 4096,
+    "entropy_threshold": 7.2,
+    "max_entropy_regions": 20,
+    "native_probe_enabled": true,
+    "native_probe_path": null,
+    "native_probe_timeout": 30,
+    "enabled_analyzers": [],
+    "external_tools": {}
+  },
+  "findings": {},
+  "issues": [],
+  "indicators": [],
+  "tools": [],
+  "errors": []
+}

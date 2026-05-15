@@ -1,0 +1,461 @@
+{
+  "target": "execution-evidence",
+  "generated_at": "2026-05-13T06:26:45.371115+00:00",
+  "config": {
+    "min_string": 4,
+    "max_strings": 500,
+    "entropy_window": 4096,
+    "entropy_threshold": 7.2,
+    "max_entropy_regions": 20,
+    "native_probe_enabled": true,
+    "native_probe_path": null,
+    "native_probe_timeout": 30,
+    "enabled_analyzers": [],
+    "external_tools": {}
+  },
+  "findings": {
+    "execution_trace": {
+      "EXEC_FLOW": {
+        "actual_execution": {
+          "function_sequence": [],
+          "syscall_sequence": [],
+          "memory_accesses": [],
+          "io_pairs": [],
+          "branches": [],
+          "returns": [],
+          "exceptions": [],
+          "execution_path": [
+            {
+              "index": 1,
+              "kind": "event",
+              "phase": "event",
+              "node_id": "event:1",
+              "depth": 0,
+              "function": null,
+              "syscall": null,
+              "address": null,
+              "address_hint": null,
+              "input_value": null,
+              "output_value": null,
+              "before": null,
+              "after": null,
+              "condition": null,
+              "target": null,
+              "taken": null,
+              "label": "{events:[{kind:call,function:recv},{kind:branch,condition:len > 0,taken:true,target:decrypt_buffer}]}",
+              "source": null,
+              "destination": null
+            }
+          ],
+          "call_stack_frames": [],
+          "call_edges": [],
+          "execution_segments": [
+            {
+              "phase": "event",
+              "start_index": 1,
+              "end_index": 1,
+              "nodes": [
+                "event:1"
+              ],
+              "kinds": [
+                "event"
+              ],
+              "depth_range": [
+                0,
+                0
+              ]
+            }
+          ],
+          "phase_sequence": [
+            "event"
+          ],
+          "max_call_depth": 0
+        },
+        "static_cfg_diff": {
+          "baseline_available": true,
+          "static_functions": [
+            "recv",
+            "decrypt_buffer"
+          ],
+          "observed_functions": [],
+          "missing_static_functions": [
+            "recv",
+            "decrypt_buffer"
+          ],
+          "runtime_only_functions": [],
+          "static_branch_paths": [],
+          "observed_branch_paths": [],
+          "observed_branch_targets": [],
+          "hidden_static_paths": [],
+          "runtime_only_branch_paths": [],
+          "function_coverage": 0.0,
+          "branch_coverage": 1.0,
+          "path_signature": [
+            "event:1"
+          ]
+        }
+      },
+      "STATE": {
+        "state_changes": [],
+        "switch_points": [],
+        "input_triggers": [],
+        "state_change_count": 0,
+        "switch_count": 0
+      },
+      "DATAFLOW": {
+        "observed_sources": [],
+        "observed_paths": [],
+        "propagation_chains": [],
+        "triggered_static_sources": [],
+        "runtime_only_sources": [],
+        "triggered_static_paths": [],
+        "untriggered_static_paths": [],
+        "unmatched_static_sources": [
+          {
+            "id": "network:recv:1",
+            "line": 1,
+            "kind": "network",
+            "callee": "recv",
+            "source": "call recv"
+          }
+        ],
+        "validation": {
+          "matched_source_count": 0,
+          "unmatched_source_count": 1,
+          "triggered_path_count": 0,
+          "untriggered_path_count": 0,
+          "state_trigger_count": 0,
+          "source_coverage": 0.0,
+          "path_coverage": 1.0
+        }
+      },
+      "DIFF": {
+        "baseline_status": "available",
+        "static_prediction": {
+          "available": true,
+          "summary": "static baseline with 2 calls, 0 branches, 1 data sources",
+          "functions": [
+            "recv",
+            "decrypt_buffer"
+          ],
+          "sources": [
+            "recv"
+          ],
+          "semantics": {
+            "intent": "behavior intent is weakly constrained by structure",
+            "confidence": 0.45,
+            "behavior_traits": [
+              "external-input processing"
+            ],
+            "basis": [
+              "control-flow shape",
+              "data-source categories",
+              "call target categories",
+              "memory access structure"
+            ],
+            "structural_evidence": [
+              "DFG contains input sources: network"
+            ],
+            "execution_model_hints": {
+              "path_count": 1,
+              "has_external_input": true,
+              "has_loop_transform": false,
+              "has_indirect_dispatch": false,
+              "has_stack_state": false,
+              "has_symbolic_memory": false
+            }
+          },
+          "function_coverage": 0.0,
+          "branch_coverage": 1.0
+        },
+        "actual_execution": {
+          "functions": [],
+          "syscalls": [],
+          "state_change_count": 0,
+          "source_count": 0,
+          "path_length": 1,
+          "branch_count": 0,
+          "memory_access_count": 0,
+          "max_call_depth": 0,
+          "path_signature": [
+            "event:1"
+          ]
+        },
+        "differences": [
+          {
+            "kind": "missing_static_function",
+            "value": "recv"
+          },
+          {
+            "kind": "missing_static_function",
+            "value": "decrypt_buffer"
+          },
+          {
+            "kind": "hidden_static_path",
+            "value": {
+              "id": "network:recv:1",
+              "line": 1,
+              "kind": "network",
+              "callee": "recv",
+              "source": "call recv"
+            }
+          }
+        ],
+        "hidden_paths": [
+          {
+            "id": "network:recv:1",
+            "line": 1,
+            "kind": "network",
+            "callee": "recv",
+            "source": "call recv"
+          }
+        ],
+        "runtime_only_paths": [],
+        "difference_score": 14,
+        "confidence": 0.52,
+        "notes": "Comparison is based on the provided static control and data flow summary."
+      },
+      "EXEC_MODEL": {
+        "model_kind": "observed_runtime_semantics",
+        "behavior_intent": {
+          "intent": "observed runtime activity",
+          "source_kinds": [],
+          "traits": [],
+          "confidence": 0.56
+        },
+        "runtime_abstraction": {
+          "entry_points": [
+            "observed-event-stream"
+          ],
+          "external_inputs": [],
+          "behavior_steps": [
+            {
+              "index": 1,
+              "kind": "event",
+              "phase": "event",
+              "node_id": "event:1",
+              "depth": 0
+            }
+          ],
+          "execution_path": [
+            {
+              "index": 1,
+              "kind": "event",
+              "phase": "event",
+              "node_id": "event:1",
+              "depth": 0,
+              "function": null,
+              "syscall": null,
+              "address": null,
+              "address_hint": null,
+              "input_value": null,
+              "output_value": null,
+              "before": null,
+              "after": null,
+              "condition": null,
+              "target": null,
+              "taken": null,
+              "label": "{events:[{kind:call,function:recv},{kind:branch,condition:len > 0,taken:true,target:decrypt_buffer}]}",
+              "source": null,
+              "destination": null
+            }
+          ],
+          "execution_segments": [
+            {
+              "phase": "event",
+              "start_index": 1,
+              "end_index": 1,
+              "nodes": [
+                "event:1"
+              ],
+              "kinds": [
+                "event"
+              ],
+              "depth_range": [
+                0,
+                0
+              ]
+            }
+          ],
+          "phase_sequence": [
+            "event"
+          ],
+          "call_stack_frames": [],
+          "branch_decisions": [],
+          "terminal_paths": {
+            "returns": [],
+            "exceptions": []
+          }
+        },
+        "state_machine": {
+          "entry_state": "event",
+          "states": [],
+          "transitions": [],
+          "phase_states": [
+            "event"
+          ],
+          "phase_segments": [
+            {
+              "phase": "event",
+              "start_index": 1,
+              "end_index": 1,
+              "nodes": [
+                "event:1"
+              ],
+              "kinds": [
+                "event"
+              ],
+              "depth_range": [
+                0,
+                0
+              ]
+            }
+          ],
+          "guard_conditions": [],
+          "input_triggers": [],
+          "terminal_states": [
+            {
+              "kind": "return",
+              "count": 0
+            },
+            {
+              "kind": "exception",
+              "count": 0
+            }
+          ]
+        },
+        "static_alignment": {
+          "baseline_available": true,
+          "static_semantics": {
+            "intent": "behavior intent is weakly constrained by structure",
+            "confidence": 0.45,
+            "behavior_traits": [
+              "external-input processing"
+            ],
+            "basis": [
+              "control-flow shape",
+              "data-source categories",
+              "call target categories",
+              "memory access structure"
+            ],
+            "structural_evidence": [
+              "DFG contains input sources: network"
+            ],
+            "execution_model_hints": {
+              "path_count": 1,
+              "has_external_input": true,
+              "has_loop_transform": false,
+              "has_indirect_dispatch": false,
+              "has_stack_state": false,
+              "has_symbolic_memory": false
+            }
+          },
+          "difference_score": 14,
+          "confidence": 0.52
+        }
+      },
+      "MEMORY_MODEL": {
+        "access_patterns": {
+          "read_count": 0,
+          "write_count": 0,
+          "unknown_address_count": 0,
+          "by_address": [],
+          "address_kinds": []
+        },
+        "objects": [],
+        "object_count": 0,
+        "data_lifecycle": {
+          "creation": [],
+          "propagation": [],
+          "destruction": []
+        },
+        "pointer_or_buffer_paths": [],
+        "potential_exception_structures": [],
+        "scope": "runtime model only; no exploit guidance"
+      },
+      "STATE_TRANSITION": {
+        "transitions": [],
+        "transition_rules": [],
+        "input_state_map": [],
+        "conditions": [],
+        "summary": {
+          "state_count": 0,
+          "transition_count": 0,
+          "input_trigger_count": 0,
+          "guard_count": 0
+        }
+      },
+      "UNCERTAINTY": {
+        "observed_modalities": [],
+        "uncertain_points": [
+          {
+            "kind": "missing_memory_log",
+            "detail": "memory reads and writes were not observed"
+          },
+          {
+            "kind": "missing_branch_log",
+            "detail": "branch decisions were not observed"
+          },
+          {
+            "kind": "missing_syscall_log",
+            "detail": "syscall behavior was not observed"
+          },
+          {
+            "kind": "unparsed_events",
+            "detail": "some runtime records could not be typed",
+            "count": 1
+          },
+          {
+            "kind": "untriggered_static_paths",
+            "detail": "static paths were not present in the supplied trace",
+            "count": 1
+          }
+        ],
+        "possible_hidden_paths": [
+          {
+            "id": "network:recv:1",
+            "line": 1,
+            "kind": "network",
+            "callee": "recv",
+            "source": "call recv"
+          }
+        ],
+        "runtime_only_paths": [],
+        "untriggered_data_paths": [],
+        "state_gaps": [],
+        "unresolved_branch_targets": [],
+        "unmatched_returns": [],
+        "symbolic_memory_objects": [],
+        "confidence": 0.36,
+        "scope": "uncertainty annotation only; no exploit guidance",
+        "static_cfg_diff": {
+          "baseline_available": true,
+          "static_functions": [
+            "recv",
+            "decrypt_buffer"
+          ],
+          "observed_functions": [],
+          "missing_static_functions": [
+            "recv",
+            "decrypt_buffer"
+          ],
+          "runtime_only_functions": [],
+          "static_branch_paths": [],
+          "observed_branch_paths": [],
+          "observed_branch_targets": [],
+          "hidden_static_paths": [],
+          "runtime_only_branch_paths": [],
+          "function_coverage": 0.0,
+          "branch_coverage": 1.0,
+          "path_signature": [
+            "event:1"
+          ]
+        }
+      }
+    }
+  },
+  "issues": [],
+  "indicators": [],
+  "tools": [],
+  "errors": []
+}

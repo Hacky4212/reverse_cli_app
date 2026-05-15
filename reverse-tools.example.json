@@ -1,0 +1,41 @@
+{
+  "min_string": 5,
+  "max_strings": 800,
+  "entropy_window": 4096,
+  "entropy_threshold": 7.2,
+  "max_entropy_regions": 20,
+  "native_probe_enabled": true,
+  "native_probe_path": null,
+  "native_probe_timeout": 30,
+  "dll_audit_enabled": true,
+  "dll_audit_path": null,
+  "dll_audit_timeout": 30,
+  "perf_scan_enabled": true,
+  "perf_scan_path": null,
+  "perf_scan_timeout": 30,
+  "process_memory_enabled": true,
+  "process_memory_path": null,
+  "process_memory_timeout": 30,
+  "process_memory_pid": null,
+  "process_memory_address": null,
+  "process_memory_size": 64,
+  "process_memory_extra_args": [],
+  "enabled_analyzers": [
+    "file_profile",
+    "strings",
+    "indicators",
+    "kernel_security",
+    "obfuscation_profile",
+    "entropy_regions",
+    "perf_scan",
+    "native_probe",
+    "dll_audit",
+    "pe_header",
+    "elf_header",
+    "external_tools"
+  ],
+  "external_tools": {
+    "capa": ["capa", "{target}"],
+    "rizin": ["rz-bin", "-I", "{target}"]
+  }
+}

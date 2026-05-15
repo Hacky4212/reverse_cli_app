@@ -1,0 +1,141 @@
+{
+  "target": "C:\\Users\\yangxu\\Desktop\\tools\\reverse-tools\\main\\native\\native_probe\\build\\minimal-pe.bin",
+  "generated_at": "2026-05-13T05:56:49.934896+00:00",
+  "config": {
+    "min_string": 4,
+    "max_strings": 500,
+    "entropy_window": 4096,
+    "entropy_threshold": 7.2,
+    "max_entropy_regions": 20,
+    "native_probe_enabled": true,
+    "native_probe_path": null,
+    "native_probe_timeout": 30,
+    "enabled_analyzers": [],
+    "external_tools": {}
+  },
+  "findings": {
+    "file_profile": {
+      "name": "minimal-pe.bin",
+      "size": 256,
+      "sha256": "e0c7390bd31f399210e5dd28dab2003af0e360c1b3363e927dc4fbc2aedd967f",
+      "md5": "71bf603797dee0d2f42c23f2c641ee5e",
+      "entropy": 0.3311,
+      "magic": "4d 5a 00 00 00 00 00 00 00 00 00 00 00 00 00 00"
+    },
+    "strings": {
+      "min_length": 4,
+      "count": 0,
+      "items": []
+    },
+    "indicators": {
+      "indicator_count": 0,
+      "indicators": [],
+      "capabilities": {}
+    },
+    "kernel_security": {
+      "driver_like": false,
+      "risk_score": 0,
+      "pe": {
+        "format": "PE",
+        "valid": false,
+        "sections": 0,
+        "characteristics": "0x2022",
+        "error": "Optional header is truncated."
+      },
+      "capabilities": {},
+      "device_names": []
+    },
+    "entropy_regions": {
+      "window": 4096,
+      "threshold": 7.2,
+      "region_count": 0,
+      "regions": []
+    },
+    "native_probe": {
+      "tool": "native_probe",
+      "version": "0.1.0",
+      "target": "C:\\Users\\yangxu\\Desktop\\tools\\reverse-tools\\main\\native\\native_probe\\build\\minimal-pe.bin",
+      "file_size": 256,
+      "magic": "4d 5a 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+      "format": "PE",
+      "valid": true,
+      "headers": {
+        "pe_offset": 128,
+        "machine": "x64",
+        "sections": 0,
+        "timestamp": 0,
+        "optional_header_size": 0,
+        "optional_header_magic": "0x0",
+        "subsystem": "0",
+        "subsystem_value": 0,
+        "characteristics": "0x2022",
+        "dll_characteristics": "0x0",
+        "certificate_table_size": 0,
+        "certificate_table_present": false
+      },
+      "sections": [],
+      "section_list_truncated": false
+    },
+    "pe_header": {
+      "pe_offset": 128,
+      "machine": "x64",
+      "sections": 0,
+      "timestamp": 0,
+      "optional_header_size": 0,
+      "optional_header_magic": "0x0",
+      "characteristics": "0x2022",
+      "file_characteristics": [
+        "EXECUTABLE_IMAGE",
+        "LARGE_ADDRESS_AWARE",
+        "DLL"
+      ],
+      "dll_characteristics": [],
+      "subsystem": null,
+      "entry_point_rva": null,
+      "preferred_image_base": null,
+      "addressing": {
+        "display_mode": "absolute",
+        "aslr_enabled": false,
+        "relocations_stripped": false,
+        "nx_compatible": false,
+        "cfg_enabled": false
+      }
+    },
+    "obfuscation_profile": {
+      "obfuscation_score": 10,
+      "entropy": 0.3311,
+      "string_count": 0,
+      "entropy_region_count": 0,
+      "signals": {},
+      "addressing": {
+        "display_mode": "absolute",
+        "aslr_enabled": false,
+        "relocations_stripped": false,
+        "preferred_image_base": null,
+        "entry_point_rva": null,
+        "stable_reference": "absolute"
+      },
+      "recommended_display": "absolute"
+    },
+    "external_tools": {
+      "enabled": false,
+      "message": "No external tools configured."
+    }
+  },
+  "issues": [],
+  "indicators": [],
+  "tools": [
+    {
+      "name": "native_probe",
+      "command": [
+        "C:\\Users\\yangxu\\Desktop\\tools\\reverse-tools\\main\\native\\native_probe\\build\\native_probe.exe",
+        "C:\\Users\\yangxu\\Desktop\\tools\\reverse-tools\\main\\native\\native_probe\\build\\minimal-pe.bin"
+      ],
+      "available": true,
+      "enabled": true,
+      "output": "{\"tool\":\"native_probe\",\"version\":\"0.1.0\",\"target\":\"C:\\\\Users\\\\yangxu\\\\Desktop\\\\tools\\\\reverse-tools\\\\main\\\\native\\\\native_probe\\\\build\\\\minimal-pe.bin\",\"file_size\":256,\"magic\":\"4d 5a 00 00 00 00 00 00 00 00 00 00 00 00 00 00\",\"format\":\"PE\",\"valid\":true,\"headers\":{\"pe_offset\":128,\"machine\":\"x64\",\"sections\":0,\"timestamp\":0,\"optional_header_size\":0,\"optional_header_magic\":\"0x0\",\"subsystem\":\"0\",\"subsystem_value\":0,\"characteristics\":\"0x2022\",\"dll_characteristics\":\"0x0\",\"certificate_table_size\":0,\"certificate_table_present\":false},\"sections\":[],\"section_list_truncated\":false}",
+      "error": null
+    }
+  ],
+  "errors": []
+}
