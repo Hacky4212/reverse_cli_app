@@ -75,37 +75,52 @@ reports/            输出报告
 Python 入口：
 
 ```powershell
-py -m reverse_framework .\samples\demo.bin
+zriv shell
+zriv -analyze file .\samples\demo.bin
 ```
+
+## Demo 权限模型
+
+- 登录账号默认从 `reverse-tools.users.json` 读取。
+- 如果没有该文件，内置 `admin / admin` 可直接登录。
+- `admin` 拥有全部权限。
+- `restricted` 只允许 `analyze` 和 `gui`。
+- `live` 和 `memory` 当前要求 `admin`。
+- GUI 不提供 `live` 和 `memory`。
+- GUI 只保留安全的静态分析入口。
+- 领导二次确认不在这版 demo 内。
+
+示例用户文件见 `reverse-tools.users.example.json`。
 
 列出分析器：
 
 ```powershell
-py -m reverse_framework --list-analyzers
+zriv --list-analyzers
 ```
 
 指定输出目录：
 
 ```powershell
-py -m reverse_framework .\samples\demo.bin --out .\reports
+zriv -analyze file .\samples\demo.bin --out .\reports
 ```
 
 指定配置：
 
 ```powershell
-py -m reverse_framework .\samples\demo.bin --config .\reverse-tools.example.json
+zriv -analyze file .\samples\demo.bin --config .\reverse-tools.example.json
 ```
 
 ## GUI
 
 ```powershell
-py -m reverse_framework --gui
-py -m reverse_framework.gui
+zriv -gui
+zriv shell
 ```
 
 `reverse-tools-gui` is also available after installation.
 Config is optional in the GUI; leave it blank unless you have a JSON file.
-The GUI now has a `Live` tab for dynamic monitoring and supports PID, process name, or window title.
+The GUI only exposes `Static EXE`, `Code Text`, and `Trace Evidence`.
+Dynamic `live` and `memory` actions are CLI-only by design.
 
 ## Python API
 
@@ -121,20 +136,20 @@ print(result.findings["kernel_security"])
 实时模式：
 
 ```powershell
-py -m reverse_framework --live --live-duration 30
+zriv -live start --duration 30
 ```
 
 按进程过滤：
 
 ```powershell
-py -m reverse_framework --live --live-pid 1234
+zriv -live start --pid 1234
 ```
 
 按进程名或窗口名过滤：
 
 ```powershell
-py -m reverse_framework --live --process-name notepad.exe
-py -m reverse_framework --live --window-title "Untitled - Notepad"
+zriv -live start --process-name notepad.exe
+zriv -live start --window-title "Untitled - Notepad"
 ```
 
 实时模式输出 JSONL，适合界面层直接订阅。
@@ -186,14 +201,16 @@ cmake --build native\process_memory_reader\build --config Release
 读取实时进程地址：
 
 ```powershell
-py -m reverse_framework --memory-pid 1234 --memory-address 0x7FF00000 --memory-size 64
+zriv -memory read --pid 1234 --address 0x7FF00000 --size 64
 ```
 
 也可以先按进程名或窗口名定位目标：
 
 ```powershell
-py -m reverse_framework --memory-address 0x7FF00000 --process-name notepad.exe
+zriv -memory read --address 0x7FF00000 --process-name notepad.exe
 ```
+
+该能力当前要求 `admin`。
 
 ## Ring0 安全边界
 

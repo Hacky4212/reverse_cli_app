@@ -12,9 +12,12 @@ dev = [
 ]
 
 [project.scripts]
-reverse-tools = "reverse_framework.cli:main"
-reverse-tools-gui = "reverse_framework.gui:main"
+zriv = "reverse_framework.launcher:main"
+reverse-tools = "reverse_framework.launcher:main"
+reverse-tools-gui = "reverse_framework.launcher:main_gui"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
+cache_dir = "_pytest_cache_safe"
+addopts = "-p no:cacheprovider"

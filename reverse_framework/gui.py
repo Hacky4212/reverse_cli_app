@@ -31,9 +31,13 @@ from reverse_framework.api import (
     available_analyzers,
     stream_live_kernel_events,
 )
+from reverse_framework.auth import AuthSession, authorize_command
 from reverse_framework.core.config import TriageConfig, load_config
 from reverse_framework.core.process_lookup import resolve_process_candidate
 from reverse_framework.reporting import ReportFormat, summarize_finding
+
+GUI_ENABLED_MODES: tuple[str, ...] = ("file", "code", "evidence")
+GUI_RING0_BLOCKED_MODES: frozenset[str] = frozenset({"live", "memory"})
 
 
 @dataclass(slots=True)
@@ -62,11 +66,12 @@ class GuiTask:
 
 
 class ReverseToolsApp:
-    def __init__(self, root: "tk.Tk") -> None:
+    def __init__(self, root: "tk.Tk", session: AuthSession | None = None) -> None:
         self.root = root
         self.root.title("reverse-tools - static + dynamic triage")
         self.root.geometry("1320x920")
         self.root.minsize(1100, 780)
+        self.session = session or AuthSession(username="guest", role="restricted")
 
         self.available_analyzers = available_analyzers()
         self.message_queue: queue.Queue[dict[str, Any]] = queue.Queue()
@@ -128,6 +133,7 @@ class ReverseToolsApp:
 
         self._configure_style()
         self._build_ui()
+        self._show_notice(f"Signed in as {self.session.username} ({self.session.role}).")
         self._poll_messages()
 
     def _configure_style(self) -> None:
@@ -276,14 +282,13 @@ class ReverseToolsApp:
         self._add_simple_row(options_frame, 4, "Max strings", self.max_strings_var)
         self._add_path_row(options_frame, 5, "Native probe", self.native_probe_var, browse="file")
         self._add_path_row(options_frame, 6, "C++ perf scan", self.perf_scan_var, browse="file")
-        self._add_path_row(options_frame, 7, "Process memory", self.process_memory_var, browse="file")
 
         ttk.Label(
             options_frame,
-            text="First use: leave Config blank. Use File for an EXE sample; use Live/Memory for dynamic input.",
+            text="First use: leave Config blank. Use File, Code, or Evidence for safe desktop triage.",
             style="Hint.TLabel",
             wraplength=315,
-        ).grid(row=8, column=0, columnspan=3, sticky="w", pady=(4, 0))
+        ).grid(row=7, column=0, columnspan=3, sticky="w", pady=(4, 0))
 
         analyzers_frame = ttk.LabelFrame(sidebar, text="Analyzer Set", padding=12, style="Card.TLabelframe")
         analyzers_frame.grid(row=1, column=0, sticky="nsew", pady=(12, 0))
@@ -348,8 +353,6 @@ class ReverseToolsApp:
                 ("file", "Static EXE"),
                 ("code", "Code Text"),
                 ("evidence", "Trace Evidence"),
-                ("live", "Live Monitor"),
-                ("memory", "Memory Read"),
             )
         ):
             self._add_mode_button(mode_bar, index, mode, label)
@@ -362,14 +365,10 @@ class ReverseToolsApp:
         file_tab = self._create_scrollable_page(page_host, "file")
         code_tab = self._create_scrollable_page(page_host, "code")
         evidence_tab = self._create_scrollable_page(page_host, "evidence")
-        live_tab = self._create_scrollable_page(page_host, "live")
-        memory_tab = self._create_scrollable_page(page_host, "memory")
 
         self._build_file_tab(file_tab)
         self._build_code_tab(code_tab)
         self._build_evidence_tab(evidence_tab)
-        self._build_live_tab(live_tab)
-        self._build_memory_tab(memory_tab)
         for mode, page in self.mode_pages.items():
             self._bind_mousewheel_recursive(page, self.mode_canvases[mode])
         self._select_mode("file")
@@ -440,11 +439,16 @@ class ReverseToolsApp:
             pady=7,
             font=("Segoe UI Semibold", 9),
             cursor="hand2",
+            state="normal",
         )
         button.grid(row=0, column=column, sticky="w", padx=(0, 8))
         self.mode_buttons[mode] = button
 
     def _select_mode(self, mode: str) -> None:
+        allowed, message = check_gui_mode_access(mode, self.session)
+        if not allowed:
+            self._show_error(message or f"{mode} is unavailable in the GUI.")
+            return
         self.mode_var.set(mode)
         page = self.mode_pages.get(mode)
         if page is not None:
@@ -455,6 +459,10 @@ class ReverseToolsApp:
                 button.configure(bg=self.colors["primary"], fg="#ffffff", activebackground=self.colors["primary_dark"])
             else:
                 button.configure(bg=self.colors["surface_alt"], fg=self.colors["text"], activebackground="#dbeafe")
+
+    def _mode_is_allowed(self, mode: str) -> bool:
+        allowed, _ = check_gui_mode_access(mode, self.session)
+        return allowed
 
     def _create_scrollable_page(self, parent: "ttk.Frame", mode: str) -> "ttk.Frame":
         outer = ttk.Frame(parent, style="Card.TFrame")
@@ -829,6 +837,11 @@ class ReverseToolsApp:
             return
 
         self._clear_notice()
+        active_mode = self._active_mode()
+        allowed, message = check_gui_mode_access(active_mode, self.session)
+        if not allowed:
+            self._show_error(message or f"{active_mode} is unavailable in the GUI.")
+            return
         try:
             task = self._collect_task()
         except Exception as exc:
@@ -1293,7 +1306,7 @@ class ReverseToolsApp:
         return lines
 
 
-def main(argv: list[str] | None = None) -> int:
+def main(argv: list[str] | None = None, session: AuthSession | None = None) -> int:
     if _TK_IMPORT_ERROR is not None or tk is None:
         print(f"GUI unavailable: {_TK_IMPORT_ERROR}", file=sys.stderr)
         return 2
@@ -1305,13 +1318,23 @@ def main(argv: list[str] | None = None) -> int:
         return 2
 
     try:
-        ReverseToolsApp(root)
+        ReverseToolsApp(root, session=session)
         root.mainloop()
     except Exception as exc:
         print(f"GUI failed: {exc}", file=sys.stderr)
         return 2
 
     return 0
+
+
+def check_gui_mode_access(mode: str, session: AuthSession | None) -> tuple[bool, str | None]:
+    normalized = mode.strip().lower()
+    if normalized in GUI_RING0_BLOCKED_MODES:
+        return False, "GUI blocks high-risk ring0 features. Use the CLI."
+    if normalized not in GUI_ENABLED_MODES:
+        return False, "GUI mode is unavailable."
+    resolved_session = session or AuthSession(username="guest", role="restricted")
+    return authorize_command(resolved_session, "analyze")
 
 
 if __name__ == "__main__":

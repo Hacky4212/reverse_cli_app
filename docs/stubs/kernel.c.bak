@@ -1,0 +1,40 @@
+#include <ntifs.h> // 这个函数同样藏在 ntifs.h 里
+
+// 假设通过逆向（比如用 CE），你找出的神秘房间号是 0x502
+#define TARGET_OFFSET 0x502 
+
+NTSTATUS ReadDynamicMemory(HANDLE TargetPid, PVOID Buffer, SIZE_T Size) {
+    NTSTATUS status = STATUS_SUCCESS;
+    PEPROCESS TargetProcess = NULL;
+    PVOID BaseAddress = NULL;      // 用来存放问出来的“大厦地址”
+    PVOID FinalAddress = NULL;     // 用来存放最终算出来的“房间绝对地址”
+    SIZE_T ReturnSize = 0;
+
+    // 1. 依然是先根据 PID 找到目标进程对象
+    status = PsLookupProcessByProcessId(TargetPid, &TargetProcess);
+    if (!NT_SUCCESS(status)) return status;
+
+    // 2. 动用硬核函数：向内核索要这个进程的“模块基址”（大厦今天的随机地址）
+    // 这个函数会返回类似 0x00007FF6A1B20000 这样的动态基址
+    BaseAddress = PsGetProcessSectionBaseAddress(TargetProcess);
+    if (BaseAddress == NULL) {
+        DbgPrint("[MyDriver] 获取基址失败！\n");
+        ObDereferenceObject(TargetProcess);
+        return STATUS_UNSUCCESSFUL;
+    }
+    DbgPrint("[MyDriver] 查到了！目标大厦今天的基址是: %p\n", BaseAddress);
+
+    // 3. 核心计算：真实地址 = 动态基址 + 固定偏移量
+    // 注意：在 C 语言里，必须先把它强转成 (PUCHAR) 也就是单字节指针，然后再加偏移量，否则 C 语言的指针算法会算错
+    FinalAddress = (PVOID)((PUCHAR)BaseAddress + TARGET_OFFSET);
+    DbgPrint("[MyDriver] 计算完毕！今天数据的真实存放地址是: %p\n", FinalAddress);
+
+    // 4. 发起降维打击：直接读取计算出来的那个地址
+    status = MmCopyVirtualMemory(
+        TargetProcess, FinalAddress, PsGetCurrentProcess(), Buffer, Size, KernelMode, &ReturnSize
+    );
+
+    // 5. 善后工作
+    ObDereferenceObject(TargetProcess);
+    return status;
+}
